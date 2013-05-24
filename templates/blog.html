@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My blog</title>
+
+
+    <!-- Le styles -->
+    <link href="c:/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link href="c:/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+
+  </head>
+
+  <body>
+
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+              <h2>New message</h2>
+              {% if form.errors %}
+                    <p style="color: red;">
+                    Please correct the error{{ form.errors|pluralize }} below.
+                    </p>
+               {% endif %}
+               {% if db_error %}
+                     <p style="color: red;">
+                     Database error ! Message can't be saved.
+                     </p>
+                {% endif %}
+
+                <form action="" method="post">
+                     <ul class="nav nav-list">
+                         {{ form.as_ul }}
+                     </ul>
+                     <input type="submit" value="Post message">
+                </form>
+        </div><!--/span-->
+        <div class="span9">
+          <div class="hero-unit">
+            <h2>Old messages</h2>
+             {% if msg_list %}
+                  {% for msg in msg_list %}
+                         <i>{{ msg.publication_date }}</i><br>{{msg.publication_text}}<br><br>
+                  {% endfor %}
+             {% endif %}
+          </div>
+         </div><!--/span-->
+      </div><!--/row-->
+
+
+
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+
+  </body>
+</html>
