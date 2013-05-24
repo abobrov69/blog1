@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="2504083499">
-    <data-source source="LOCAL" name="Django default" product="SQLite" version="3.7.2" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native" uuid="8bf68246-a7d9-413e-b1d6-e0712104887d">
+  <component name="DataSourceManagerImpl" format="xml" hash="3948367419">
+    <data-source source="LOCAL" name="Django default" product="SQLite" version="3.7.2" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native" uuid="fab882b8-5b06-4a1d-a345-9f02d0bc595f">
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Wrk\blog1\blog_bs.db</jdbc-url>
       <libraries>
