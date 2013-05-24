@@ -1,13 +1,13 @@
 from django.db import models
 
-class Blog1(models.Model):
-    publication_date = models.DateTimeField()
-    publication_text = models.CharField(max_length=140)
+class Publication(models.Model):
+    date = models.DateTimeField()
+    text = models.CharField(max_length=140)
 
     def __unicode__(self):
-        return str(self.publication_date) + '\n' + self.publication_text
+        return str(self.date) + '\n' + self.text
 
     class Meta:
-        ordering = ["-publication_date"]     
+        ordering = ["-date"]
 
 

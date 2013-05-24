@@ -55,7 +55,7 @@
             <h2>Old messages</h2>
              {% if msg_list %}
                   {% for msg in msg_list %}
-                         <i>{{ msg.publication_date }}</i><br>{{msg.publication_text}}<br><br>
+                         <i>{{ msg.date }}</i><br>{{msg.text}}<br><br>
                   {% endfor %}
              {% endif %}
           </div>

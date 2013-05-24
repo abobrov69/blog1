@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from forms import MsgForm
-from models import Blog1
+from models import Publication
 from datetime import datetime
 
 def blog_main(request):
@@ -9,12 +9,12 @@ def blog_main(request):
         if form.is_valid():
             cd = form.cleaned_data
             try:
-                Blog1 (publication_date=datetime.now(), publication_text=cd['message']).save()
+                Publication (date=datetime.now(), text=cd['message']).save()
                 form = MsgForm()
             except:
                 form = MsgForm(request.POST)
-                return render_to_response('blog.html', {'form': form, 'msg_list': Blog1.objects.all(), 'db_error':True})
+                return render_to_response('blog.html', {'form': form, 'msg_list': Publication.objects.all(), 'db_error':True})
     else:
         form = MsgForm()
-    return render_to_response('blog.html', {'form': form, 'msg_list': Blog1.objects.all(), 'db_error':False})
+    return render_to_response('blog.html', {'form': form, 'msg_list': Publication.objects.all(), 'db_error':False})
 
