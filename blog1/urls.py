@@ -7,7 +7,7 @@ from views import blog_main
 
 urlpatterns = patterns('',
     ('^$', blog_main),
-    # Examples:
+    # Examples: d
     # url(r'^$', 'blog1.views.home', name='home'),
     # url(r'^blog1/', include('blog1.foo.urls')),
 
