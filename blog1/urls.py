@@ -10,7 +10,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    ('^$', blog_main),
+    url('^$', blog_main, name="blogmain"),
     # Examples: d
     # url(r'^$', 'blog1.views.home', name='home'),
     # url(r'^blog1/', include('blog1.foo.urls')),
@@ -20,7 +20,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    (r'^about/', AboutView.as_view()),
     (r'^msg/$', MsgListView.as_view()),
 )
 from django.conf import settings
