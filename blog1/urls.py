@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from views import blog_main
 from django.conf import settings
+from django.views.generic import TemplateView
 import os
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,6 +20,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    (r'^about/', TemplateView.as_view(template_name="about.html")),
 )
 from django.conf import settings
 
