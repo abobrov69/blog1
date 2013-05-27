@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+{% block content %}
+    <h2>Messages</h2>
+    <ul>
+        {% for msg in object_list %}
+            <li><i>{{ msg.date }}</i><br>{{msg.text}}<br><br></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+</body>
+</html>
