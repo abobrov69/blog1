@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
-from views import blog_main, AboutView, MsgListView
+from views import MsgListView, BlogMainView
 from django.conf import settings
-from django.views.generic import TemplateView
 import os
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -10,7 +9,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url('^$', blog_main, name="blogmain"),
+    url('^$', BlogMainView.as_view (), name="blogclass"),
     # Examples: d
     # url(r'^$', 'blog1.views.home', name='home'),
     # url(r'^blog1/', include('blog1.foo.urls')),
@@ -22,7 +21,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     (r'^msg/$', MsgListView.as_view()),
 )
-from django.conf import settings
 
 if settings.DEBUG:
     urlpatterns += patterns('django.contrib.staticfiles.views',
