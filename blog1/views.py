@@ -2,6 +2,10 @@ from django.shortcuts import render_to_response
 from forms import MsgForm
 from models import Publication
 from datetime import datetime
+from django.views.generic import TemplateView
+
+class AboutView(TemplateView):
+    template_name = "about.html"
 
 def blog_main(request):
     if request.method == 'POST':
