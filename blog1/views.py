@@ -1,10 +1,11 @@
 from django.shortcuts import render_to_response, render
-from forms import MsgForm
+from forms import MsgForm, MsgForm2
 from models import Publication
 from datetime import datetime
 from django.views.generic import TemplateView, ListView, View, FormView
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 class AboutView(TemplateView):
     template_name = "about.html"
@@ -30,13 +31,13 @@ def blog_main(request):
 class BlogMainView(ListView):
     form_class = MsgForm
     template_name = 'blog.html'
-    context_object_name = 'msg_list'
     model = Publication
     show_msg_lenght = 60
 
     def get_queryset_with_cutted_txt (self):
         msg_lst = self.get_queryset ()
         if msg_lst:
+#            msg_lst = [msg.text = msg.text[:self.show_msg_lenght-5] + ' ...' if len(msg.text) > self.show_msg_lenght for msg in msg_lst]
             for msg in msg_lst:
                 if len(msg.text) > self.show_msg_lenght: msg.text = msg.text[:self.show_msg_lenght-5] + ' ...'
 
@@ -70,3 +71,22 @@ class MsgListView(ListView):
         # RFC 1123 date format
         response['Last-Modified'] = last_msg.date.strftime('%a, %d %b %Y %H:%M:%S GMT')
         return response
+
+class MsgCreate(CreateView):
+    form_class = MsgForm2
+    model = Publication
+    template_name = "publication_form.html"
+    # context_object_name = 'messages_list'
+
+    def form_valid(self, form):
+        form.instance.date=datetime.now()
+        return super(MsgCreate, self).form_valid(form)
+
+class MsgUpdate(UpdateView):
+    form_class = MsgForm2
+    model = Publication
+    template_name = "publication_form.html"
+
+class MsgDelete(DeleteView):
+    model = Publication
+    success_url = reverse_lazy('msglist')

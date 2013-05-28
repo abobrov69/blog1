@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from views import MsgListView, BlogMainView
+from views import MsgListView, BlogMainView, MsgCreate, MsgDelete, MsgUpdate
 from django.conf import settings
 import os
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +19,10 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    (r'^msg/$', MsgListView.as_view()),
+    url(r'^msg/$', MsgListView.as_view(), name="msglist"),
+    url(r'msg/add/$', MsgCreate.as_view(), name='msg_add'),
+    url(r'msg/(?P<pk>\d+)/$', MsgUpdate.as_view(), name='msg_update'),
+    url(r'msg/(?P<pk>\d+)/delete/$', MsgDelete.as_view(), name='msg_delete'),
 )
 
 if settings.DEBUG:

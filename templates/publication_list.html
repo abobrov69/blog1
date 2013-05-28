@@ -1,16 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Messages list{% endblock %}
+
 {% block content %}
-    <h2>Messages</h2>
-    <ul>
-        {% for msg in messages_list %}
-            <li><i>{{ msg.date }}</i><br>{{msg.text}}<br><br></li>
-        {% endfor %}
-    </ul>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+            <h2>Messages</h2>
+               {% for msg in messages_list %}
+                         <div class="span4"><i>{{ msg.date }}</i></div><div class="span5">&nbsp;</div><br>
+                         <div class="span9">{{msg.text}}<br></div><br>
+                         <div class="span9">
+                             <a href="add" class="btn btn-mini"><i class="icon-envelope"></i></a>&nbsp
+                             <a href="{{ msg.pk }}" class="btn btn-mini"><i class="icon-pencil"></i></a>&nbsp
+                             <a href="{{ msg.pk }}/delete" class="btn btn-mini"><i class="icon-trash"></i></a>&nbsp
+                             <hr size="1" width="100%" align="center" color="black">
+                         </div><br>
+               {% endfor %}
+        </div>
+      </div>
+    </div>
+
 {% endblock %}
-</body>
-</html>

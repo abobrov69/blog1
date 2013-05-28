@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}My blog{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+              <h2>New message</h2>
+
+              {% if form.errors %}
+                    <p style="color: red;">
+                    Please correct the error{{ form.errors|pluralize }} below.
+                    </p>
+               {% endif %}
+
+                <form action="" method="post">
+                     <ul class="nav nav-list">
+                         {{ form.as_ul }}
+                     </ul>
+                     <input type="submit" value="Post message">
+                </form>
+        </div><!--/span-->
+      </div><!--/row-->
+    </div><!--/.fluid-container-->
+
+{% endblock %}

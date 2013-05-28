@@ -31,13 +31,14 @@
             <h2>Old messages</h2>
              {% if msg_list %}
                   {% for msg in msg_list %}
-                         <div class="span4"><i>{{ msg.date }}</i></div><div class="span5">&nbsp</div><br>
+                         <div class="span4"><i>{{ msg.date }}</i></div><div class="span5">&nbsp;</div><br>
                          <div class="span9">{{msg.text}}<br></div><br>
                          <div class="span9">
                              <a href="#" class="btn btn-mini"><i class="icon-search"></i></a>&nbsp
                              <a href="#" class="btn btn-mini"><i class="icon-pencil"></i></a>&nbsp
                              <a href="#" class="btn btn-mini"><i class="icon-trash"></i></a>&nbsp
-                         </div><br><br>
+                             <hr size="1" width="100%" align="center" color="black">
+                         </div><br>
                   {% endfor %}
              {% endif %}
           </div>
