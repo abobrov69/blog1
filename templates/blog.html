@@ -1,26 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>My blog</title>
-    {% load static from staticfiles %}
+{% extends "base.html" %}
 
-    <!-- Le styles -->
-    <link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-    </style>
-    <link href="{% static "css/bootstrap-responsive.css" %}" rel="stylesheet">
+{% block title %}My blog{% endblock %}
 
-  </head>
-
-  <body>
-
+{% block content %}
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
@@ -49,21 +31,12 @@
             <h2>Old messages</h2>
              {% if msg_list %}
                   {% for msg in msg_list %}
-                         <i>{{ msg.date }}</i><br>{{msg.text}}<br><br>
+                         <i>{{ msg.date }}</i><br>{{msg.text}}<br><a href="#" class="btn btn-mini"><i class="icon-search"></i>  </a><br>
                   {% endfor %}
              {% endif %}
           </div>
          </div><!--/span-->
       </div><!--/row-->
-
-
-
     </div><!--/.fluid-container-->
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-
-
-  </body>
-</html>
+{% endblock %}

@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, render
 from forms import MsgForm
 from models import Publication
 from datetime import datetime
-from django.views.generic import TemplateView, ListView, View
+from django.views.generic import TemplateView, ListView, View, FormView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
