@@ -32,10 +32,19 @@ class BlogMainView(ListView):
     template_name = 'blog.html'
     context_object_name = 'msg_list'
     model = Publication
+    show_msg_lenght = 60
+
+    def get_queryset_with_cutted_txt (self):
+        msg_lst = self.get_queryset ()
+        if msg_lst:
+            for msg in msg_lst:
+                if len(msg.text) > self.show_msg_lenght: msg.text = msg.text[:self.show_msg_lenght-5] + ' ...'
+
+        return msg_lst
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        return render(request,  self.template_name, {'form': form, 'db_error':False, 'msg_list': self.get_queryset() }) #
+        return render(request,  self.template_name, {'form': form, 'db_error':False, 'msg_list':  self.get_queryset_with_cutted_txt() }) #
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -46,7 +55,7 @@ class BlogMainView(ListView):
                 # form = MsgForm()
             except:
                 form = self.form_class(request.POST)
-                return render(request,  self.template_name, {'form': form, 'db_error':True, 'msg_list': self.get_queryset()}) #
+                return render(request,  self.template_name, {'form': form, 'db_error':True, 'msg_list': self.get_queryset_with_cutted_txt()}) #
             return HttpResponseRedirect (reverse('blogclass'))
         return render(request, self.template_name, {'form': form})
 
