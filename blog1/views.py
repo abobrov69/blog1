@@ -6,6 +6,8 @@ from django.views.generic import TemplateView, ListView, View, FormView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 class AboutView(TemplateView):
     template_name = "about.html"
@@ -31,8 +33,13 @@ def blog_main(request):
 class BlogMainView(ListView):
     form_class = MsgForm
     template_name = 'blog.html'
+    context_object_name = 'msg_list'
     model = Publication
     show_msg_lenght = 60
+    paginate_by = 5
+
+    def get_template_names(self):
+        return [self.template_name]
 
     def get_queryset_with_cutted_txt (self):
         msg_lst = self.get_queryset ()
@@ -45,8 +52,12 @@ class BlogMainView(ListView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        return render(request,  self.template_name, {'form': form, 'db_error':False, 'msg_list':  self.get_queryset_with_cutted_txt() }) #
+        return self.render_to_response({'form': form, 'db_error':False, 'msg_list':  self.get_queryset_with_cutted_txt() })
 
+            #  render_to_response (self, {'form': form, 'db_error':False, 'msg_list':  self.get_queryset_with_cutted_txt() }) #
+
+
+#    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
@@ -56,9 +67,9 @@ class BlogMainView(ListView):
                 # form = MsgForm()
             except:
                 form = self.form_class(request.POST)
-                return render(request,  self.template_name, {'form': form, 'db_error':True, 'msg_list': self.get_queryset_with_cutted_txt()}) #
+                return self.render_to_response({'form': form, 'db_error':True, 'msg_list': self.get_queryset_with_cutted_txt()}) #
             return HttpResponseRedirect (reverse('blogclass'))
-        return render(request, self.template_name, {'form': form})
+        return self.render_to_response({'form': form})
 
 class MsgListView(ListView):
     model = Publication
