@@ -1,4 +1,5 @@
-from django.shortcuts import render_to_response, render
+#from django.shortcuts import render_to_response, render
+from sys import exc_info
 from forms import MsgForm, MsgForm2
 from models import Publication
 from datetime import datetime
@@ -6,6 +7,7 @@ from django.views.generic import TemplateView, ListView, View, FormView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.db import DatabaseError
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -75,9 +77,9 @@ class BlogMainView(ListView):
             try:
                 Publication (date=datetime.now(), text=cd['message']).save()
                 # form = MsgForm()
-            except:
+            except DatabaseError:
                 self.form = self.form_class(request.POST)
-                self.db_error = True
+                self.db_error = exc_info()[1].message
                 return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context)) #
             return HttpResponseRedirect (reverse('blogclass'))
         return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context))
