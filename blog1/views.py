@@ -37,10 +37,51 @@ class BlogMainView(ListView):
     model = Publication
     show_msg_lenght = 60
     paginate_by = 5
+    db_error = False
+    form = False
 
     def get_template_names(self):
         return [self.template_name]
 
+    def get_queryset (self):
+        msg_lst = super(BlogMainView,self).get_queryset ()
+        if msg_lst:
+#            msg_lst = [msg.text = msg.text[:self.show_msg_lenght-5] + ' ...' if len(msg.text) > self.show_msg_lenght for msg in msg_lst]
+            for msg in msg_lst:
+                if len(msg.text) > self.show_msg_lenght: msg.text = msg.text[:self.show_msg_lenght-5] + ' ...'
+        return msg_lst
+
+#    def render_to_response(self, context, **response_kwargs):
+#        a = dc
+#        return super (BlogMainView,self).render_to_response(self, context, **response_kwargs)
+
+
+    def get_context_data(self, **kwargs):
+        context = {'db_error': self.db_error}
+        if self.form: context['form'] = self.form
+        context.update(kwargs)
+        return super(BlogMainView, self).get_context_data(**context)
+
+    def get(self, request, *args, **kwargs):
+        self.form = self.form_class()
+        return super(BlogMainView, self).get (request)
+
+    def post(self, request, *args, **kwargs):
+        self.form = self.form_class(request.POST)
+#        context = {'form': self.form}
+        if self.form.is_valid():
+            cd = self.form.cleaned_data
+            self.db_error = False
+            try:
+                Publication (date=datetime.now(), text=cd['message']).save()
+                # form = MsgForm()
+            except:
+                self.form = self.form_class(request.POST)
+                self.db_error = True
+                return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context)) #
+            return HttpResponseRedirect (reverse('blogclass'))
+        return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context))
+"""
     def get_queryset_with_cutted_txt (self):
         msg_lst = self.get_queryset ()
         if msg_lst:
@@ -70,6 +111,8 @@ class BlogMainView(ListView):
                 return self.render_to_response({'form': form, 'db_error':True, 'msg_list': self.get_queryset_with_cutted_txt()}) #
             return HttpResponseRedirect (reverse('blogclass'))
         return self.render_to_response({'form': form})
+"""
+
 
 class MsgListView(ListView):
     model = Publication
@@ -82,6 +125,10 @@ class MsgListView(ListView):
         # RFC 1123 date format
         response['Last-Modified'] = last_msg.date.strftime('%a, %d %b %Y %H:%M:%S GMT')
         return response
+
+    def get_context_data(self, **kwargs):
+        a = b
+        return super(MsgListView, self).get_context_data(**context)
 
 class MsgCreate(CreateView):
     form_class = MsgForm2
