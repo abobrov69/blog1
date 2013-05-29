@@ -3,47 +3,48 @@
 {% block title %}My blog{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container">
       <div class="row-fluid">
-        <div class="span3">
-              <h2>New message</h2>
-
-              {% if form.errors %}
-                    <p style="color: red;">
-                    Please correct the error{{ form.errors|pluralize }} below.
-                    </p>
-               {% endif %}
-               {% if db_error %}
-                     <p style="color: red;">
-                     Database error: {{ db_error }} ! Message can't be saved.
-                     </p>
-                {% endif %}
-
-                <form action="" method="post">
-                     <ul class="nav nav-list">
-                         {{ form.as_ul }}
-                     </ul>
-                     <input type="submit" value="Post message">
-                </form>
-        </div><!--/span-->
+        <div class="span3"> <h3>New message</h3></div>
         <div class="span9">
-          <div class="hero-unit">
+             <form action="" method="post">{{ form.as_p }}<input type="submit" value="Post message"></form>
+        </div>
+      </div>
+      <div class="row-fluid">
+          <div class="span12">
+             {% if form.errors %}
+                   <p style="color: red;">
+                   Please correct the error{{ form.errors|pluralize }} below. {{ form.errors.message }}
+                   </p>
+             {% endif %}
+             {% if db_error %}
+                   <p style="color: red;">
+                   Database error: {{ db_error }} ! Message can't be saved.
+             {% endif %}
+         </div>
+      </div>
+
+      <div class="row-fluid">
+          <div class="span12">
             <h2>Old messages</h2>
+          </div>
+      </div>
              {% if msg_list %}
                   {% for msg in msg_list %}
-                         <div class="span4"><i>{{ msg.date }}</i></div><div class="span5">&nbsp;</div><br>
-                         <div class="span9">{{msg.text}}<br></div><br>
-                         <div class="span9">
+                      <div class="row-fluid">
+                         <div class="span3"><i>{{ msg.date }}</i></div>
+                         <div class="span7">{{msg.text}}</div>
+                         <div class="span2">
                              <a href="#" class="btn btn-mini"><i class="icon-search"></i></a>&nbsp
                              <a href="#" class="btn btn-mini"><i class="icon-pencil"></i></a>&nbsp
                              <a href="#" class="btn btn-mini"><i class="icon-trash"></i></a>&nbsp
-                             <hr size="1" width="100%" align="center" color="black">
-                         </div><br>
+                         </div>
+                       </div>
+                      <div class="row-fluid">
+                         <div class="span12"><hr size="1" width="100%" align="center" color="black"></div>
+                      </div>
                   {% endfor %}
              {% endif %}
-          </div>
-         </div><!--/span-->
-      </div><!--/row-->
     </div><!--/.fluid-container-->
 
 {% endblock %}

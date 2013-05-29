@@ -31,16 +31,19 @@ def blog_main(request):
         form = MsgForm()
     return render_to_response('blog.html', {'form': form, 'msg_list': Publication.objects.all(), 'db_error':False})
 """
-
-class BlogMainView(ListView):
-    form_class = MsgForm
-    template_name = 'blog.html'
-    context_object_name = 'msg_list'
+class MsgListView(ListView):
     model = Publication
+    template_name = "publication_list.html"
+    context_object_name = 'messages_list'
+
+class BlogMainView(MsgListView):
+    form_class = MsgForm
+    context_object_name = 'msg_list'
     show_msg_lenght = 60
     paginate_by = 5
     db_error = False
     form = False
+    template_name = 'blog.html'
 
     def get_template_names(self):
         return [self.template_name]
@@ -83,6 +86,7 @@ class BlogMainView(ListView):
                 return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context)) #
             return HttpResponseRedirect (reverse('blogclass'))
         return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context))
+
 """
     def get_queryset_with_cutted_txt (self):
         msg_lst = self.get_queryset ()
@@ -115,7 +119,7 @@ class BlogMainView(ListView):
         return self.render_to_response({'form': form})
 """
 
-
+"""
 class MsgListView(ListView):
     model = Publication
     template_name = "publication_list.html"
@@ -131,6 +135,7 @@ class MsgListView(ListView):
     def get_context_data(self, **kwargs):
         a = b
         return super(MsgListView, self).get_context_data(**context)
+"""
 
 class MsgCreate(CreateView):
     form_class = MsgForm2
