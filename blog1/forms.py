@@ -9,12 +9,17 @@ class MsgForm(forms.Form):
 
     def as_p(self):
         "Returns this form rendered as HTML <p>s."
-        return self._html_output(
+        e = self.errors
+        ec = e.__class__
+        em = e['message']
+        out = self._html_output(
             normal_row = '<p%(html_class_attr)s>%(label)s %(field)s%(help_text)s</p>',
             error_row = '%s',
             row_ender = '</p>',
             help_text_html = ' <span class="helptext">%s</span>',
-            errors_on_separate_row = False)
+            errors_on_separate_row = True)
+        aa = aa
+        return out
 
 class MsgForm2 (forms.ModelForm):
     class Meta:
