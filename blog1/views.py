@@ -3,7 +3,7 @@ from sys import exc_info
 from forms import MsgForm, MsgForm2
 from models import Publication
 from datetime import datetime
-from django.views.generic import TemplateView, ListView, View, FormView
+from django.views.generic import TemplateView, ListView # , View, FormView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView

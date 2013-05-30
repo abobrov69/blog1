@@ -5,7 +5,7 @@ from django.conf import settings
 class Publication(models.Model):
     date = models.DateTimeField()
     text = models.CharField(max_length=140)
-    author = models.OneToOneField(
+    author = models.ForeignKey(
             settings.AUTH_USER_MODEL)
 
     def __unicode__(self):
