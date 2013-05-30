@@ -10,6 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db import DatabaseError
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth import REDIRECT_FIELD_NAME
 
 class AboutView(TemplateView):
     template_name = "about.html"
@@ -44,6 +45,7 @@ class BlogMainView(MsgListView):
     db_error = False
     form = False
     template_name = 'blog.html'
+
 
     def get_template_names(self):
         return [self.template_name]
