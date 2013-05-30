@@ -71,6 +71,7 @@ class BlogMainView(MsgListView):
         self.form = self.form_class()
         return super(BlogMainView, self).get (request)
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.form = self.form_class(request.POST)
 #        context = {'form': self.form}
@@ -78,7 +79,8 @@ class BlogMainView(MsgListView):
             cd = self.form.cleaned_data
             self.db_error = False
             try:
-                Publication (date=datetime.now(), text=cd['message']).save()
+                unm = request.user.__class__
+                Publication (date=datetime.now(), text=cd['message'], author=request.user).save()
                 # form = MsgForm()
             except DatabaseError:
                 self.form = self.form_class(request.POST)

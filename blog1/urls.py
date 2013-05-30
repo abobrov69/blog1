@@ -2,6 +2,8 @@ from django.conf.urls import patterns, include, url
 from views import MsgListView, BlogMainView, MsgCreate, MsgDelete, MsgUpdate
 from django.conf import settings
 import os
+from django.contrib.auth.views import login, logout
+
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Uncomment the next two lines to enable the admin:
@@ -23,6 +25,8 @@ urlpatterns = patterns('',
     url(r'msg/add/$', MsgCreate.as_view(), name='msg_add'),
     url(r'msg/(?P<pk>\d+)/$', MsgUpdate.as_view(), name='msg_update'),
     url(r'msg/(?P<pk>\d+)/delete/$', MsgDelete.as_view(), name='msg_delete'),
+    (r'^accounts/login/$',  login),
+    (r'^accounts/logout/$', logout),
 )
 
 if settings.DEBUG:

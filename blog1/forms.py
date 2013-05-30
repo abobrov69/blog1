@@ -25,7 +25,7 @@ class MsgForm(forms.Form):
 class MsgForm2 (forms.ModelForm):
     class Meta:
         model = Publication
-        exclude = ('date',)
+        exclude = ('date','author')
 #        fields = ('text')
         widgets = {
             'text': forms.Textarea(attrs={'cols': 80, 'rows': 20}),
