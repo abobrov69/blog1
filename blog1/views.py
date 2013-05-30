@@ -79,7 +79,6 @@ class BlogMainView(MsgListView):
             cd = self.form.cleaned_data
             self.db_error = False
             try:
-                unm = request.user.__class__
                 Publication (date=datetime.now(), text=cd['message'], author=request.user).save()
                 # form = MsgForm()
             except DatabaseError:
