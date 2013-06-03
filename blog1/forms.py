@@ -4,10 +4,10 @@ from models import Publication
 #class MsgTextArea (forms.Textarea)
 
 class MsgForm(forms.Form):
-    wj = forms.Textarea(attrs={'cols': 80, 'rows': 3, 'class': "span10"})
+    wj = forms.Textarea(attrs={'cols': 80, 'rows': 3, 'class': "span9"})
     message = forms.CharField(widget=wj , max_length=140, label='Input text of new message here')
     errmsg = ''
-    user = 'testik'
+    user = ''
 
     def as_p(self):
         "Returns this form rendered as HTML <p>s."
@@ -29,5 +29,5 @@ class MsgForm2 (forms.ModelForm):
         exclude = ('date','author')
 #        fields = ('text')
         widgets = {
-            'text': forms.Textarea(attrs={'cols': 80, 'rows': 20}),
+            'text': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'class': "span9"}),
         }

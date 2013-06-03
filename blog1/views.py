@@ -71,7 +71,7 @@ class BlogMainView(MsgListView):
         return super(BlogMainView, self).get_context_data(**context)
 
     def SetFormUser (self,request):
-        self.form.user = '' if request.user.__class__ is AnonymousUser else request.user
+        self.form.user = '' if request.user.is_anonymous() else request.user.username
 #        u = self.form.user
 #        asdqd = asdasdasdsd
 
@@ -166,4 +166,4 @@ class MsgUpdate(UpdateView):
 
 class MsgDelete(DeleteView):
     model = Publication
-    success_url = reverse_lazy('msglist')
+    success_url = reverse_lazy('blogclass')
