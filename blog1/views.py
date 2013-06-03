@@ -10,6 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db import DatabaseError
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.models import AnonymousUser
 
 
 class AboutView(TemplateView):
@@ -69,13 +70,21 @@ class BlogMainView(MsgListView):
         context.update(kwargs)
         return super(BlogMainView, self).get_context_data(**context)
 
+    def SetFormUser (self,request):
+        self.form.user = '' if request.user.__class__ is AnonymousUser else request.user
+#        u = self.form.user
+#        asdqd = asdasdasdsd
+
     def get(self, request, *args, **kwargs):
         self.form = self.form_class()
+        self.SetFormUser (request)
+#        aaaa = ldfkldfk
         return super(BlogMainView, self).get (request)
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.form = self.form_class(request.POST)
+        self.SetFormUser (request)
 #        context = {'form': self.form}
         if self.form.is_valid():
             cd = self.form.cleaned_data
