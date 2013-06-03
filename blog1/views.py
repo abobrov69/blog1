@@ -10,7 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db import DatabaseError
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.auth import REDIRECT_FIELD_NAME
+
 
 class AboutView(TemplateView):
     template_name = "about.html"

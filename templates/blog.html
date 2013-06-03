@@ -7,7 +7,7 @@
       <div class="row-fluid">
         <div class="span3"> <h3>New message</h3></div>
         <div class="span9">
-             <form action="" method="post">{{ form.as_p }}<input type="submit" value="Post message"></form>
+             <form action="" method="post">{% csrf_token %}{{ form.as_p }}<input type="submit" value="Post message"></form>
         </div>
       </div>
       <div class="row-fluid">
