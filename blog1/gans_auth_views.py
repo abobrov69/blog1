@@ -23,15 +23,11 @@ class GnsLoginForm (FormView):
             redirect_to = request.REQUEST.get(self.redirect_field_name, '')
             context ['site'] = get_current_site(request)
             context ['site_name'] = context ['site'].name
-            q2 = self.redirect_field_name
             # Ensure the user-originating redirection url is safe.
-            aaaa = sdfjsdflkdfj111
             if not is_safe_url(url=redirect_to, host=request.get_host()):
                 redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
-                aaaa = sdfjsdflkdfj
 
-            context [self.redirect_field_name] = redirect_to,
-
+            context [self.redirect_field_name] = redirect_to
         context.update(kwargs)
         return super(GnsLoginForm, self).get_context_data(**context)
 
@@ -46,8 +42,6 @@ class GnsLoginForm (FormView):
         self.form = self.form_class(data=request.POST)
         context = self.get_context_data (request=request)
         redirect_to = context [self.redirect_field_name]
-#        ib = self.form.is_bound
-#        aaaaaaaaaa = ffffffffff
         if self.form.is_valid():
 
             # Okay, security check complete. Log the user in.
