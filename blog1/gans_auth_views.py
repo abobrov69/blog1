@@ -1,5 +1,6 @@
 from django.views.generic import FormView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
+from django.utils.http import is_safe_url
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login
 from django.template.response import TemplateResponse
@@ -22,14 +23,17 @@ class GnsLoginForm (FormView):
             redirect_to = request.REQUEST.get(self.redirect_field_name, '')
             context ['site'] = get_current_site(request)
             context ['site_name'] = context ['site'].name
+            q2 = self.redirect_field_name
             # Ensure the user-originating redirection url is safe.
+            aaaa = sdfjsdflkdfj111
             if not is_safe_url(url=redirect_to, host=request.get_host()):
                 redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+                aaaa = sdfjsdflkdfj
 
             context [self.redirect_field_name] = redirect_to,
 
         context.update(kwargs)
-        return super(BlogMainView, self).get_context_data(**context)
+        return super(GnsLoginForm, self).get_context_data(**context)
 
     def get(self, request, *args, **kwargs):
         self.form = self.form_class()
@@ -39,10 +43,12 @@ class GnsLoginForm (FormView):
 
 
     def post(self, request, *args, **kwargs):
-        self.form = self.form_class(request.POST)
+        self.form = self.form_class(data=request.POST)
         context = self.get_context_data (request=request)
         redirect_to = context [self.redirect_field_name]
-        if form.is_valid():
+#        ib = self.form.is_bound
+#        aaaaaaaaaa = ffffffffff
+        if self.form.is_valid():
 
             # Okay, security check complete. Log the user in.
             auth_login(request, self.form.get_user())

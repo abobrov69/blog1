@@ -86,6 +86,8 @@ class BlogMainView(MsgListView):
         self.form = self.form_class(request.POST)
         self.SetFormUser (request)
 #        context = {'form': self.form}
+#        ib = self.form.is_bound
+#           aaaaaaaaaa = ffffffffff
         if self.form.is_valid():
             cd = self.form.cleaned_data
             self.db_error = False

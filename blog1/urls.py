@@ -3,6 +3,7 @@ from views import MsgListView, BlogMainView, MsgCreate, MsgDelete, MsgUpdate
 from django.conf import settings
 import os
 from django.contrib.auth.views import login, logout
+from gans_auth_views import GnsLoginForm
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,7 +28,8 @@ urlpatterns = patterns('',
     url(r'(?P<pk>\d+)/$', MsgUpdate.as_view(), name='msg_update'),
     url(r'msg/(?P<pk>\d+)/delete/$', MsgDelete.as_view(), name='msg_delete'),
     url(r'(?P<pk>\d+)/delete/$', MsgDelete.as_view(), name='msg_delete'),
-    (r'^accounts/login/$',  login),
+#    (r'^accounts/login/$', GnsLoginForm.as_view()),  #  login),
+    (r'^accounts/login/$', login),  #  ),
     (r'^accounts/logout/$', logout),
 )
 
