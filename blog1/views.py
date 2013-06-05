@@ -135,6 +135,7 @@ class MsgUpdate(UpdateView):
 class MsgDelete(DeleteView):
     model = Publication
     success_url = reverse_lazy('blogclass')
+    template_name = "publication_confirm_delete.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
