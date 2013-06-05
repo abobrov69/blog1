@@ -3,22 +3,20 @@
 {% block title %}Messages list{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container">
       <div class="row-fluid">
         <div class="span12">
             <h2>Messages</h2>
-               {% for msg in messages_list %}
-                         <div class="span4"><i>{{ msg.date }}</i></div><div class="span5">&nbsp;</div><br>
-                         <div class="span9">{{msg.text}}<br></div><br>
-                         <div class="span9">
-                             <a href="add" class="btn btn-mini"><i class="icon-envelope"></i></a>&nbsp
-                             <a href="{{ msg.pk }}" class="btn btn-mini"><i class="icon-pencil"></i></a>&nbsp
-                             <a href="{{ msg.pk }}/delete" class="btn btn-mini"><i class="icon-trash"></i></a>&nbsp
-                             <hr size="1" width="100%" align="center" color="black">
-                         </div><br>
-               {% endfor %}
         </div>
       </div>
+               {% for msg in messages_list %}
+                     <div class="row-fluid">
+                         <div class="span1">{{msg.pk}}</div><div class="span3"><i>{{ msg.date }}</i></div><div class="span8">{{msg.author}}</div>
+                     </div>
+                     <div class="row-fluid">
+                         <div class="span12">{{msg.text}}<br></div>
+                     </div>
+               {% endfor %}
     </div>
 
 {% endblock %}
