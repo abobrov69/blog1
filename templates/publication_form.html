@@ -3,13 +3,26 @@
 {% block title %}My blog{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container">
       <div class="row-fluid">
         <div class="span12">
-              <h2>New message</h2>
+            <p><a href="/">[Перейти на главную страницу]</a></p>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12">
+              <h2>Edit message</h2>
+        </div><!--/span-->
+      </div><!--/row-->
+      <div class="row-fluid">
+            <div class="span12"><i>{{ publication.date }}</i></div>
+      </div><!--/row-->
+
+      <div class="row-fluid">
+        <div class="span12">
 
               {% if form.errors %}
-                    <p style="color: red;">
+                    <p class="text-error">
                     Please correct the error{{ form.errors|pluralize }} below.
                     </p>
               {% endif %}
@@ -18,7 +31,7 @@
                      <ul class="nav nav-list">
                          {{ form.as_ul }}
                      </ul>
-                     <input type="submit" value="Post message">
+                     <input type="submit" value="Save message">
               </form>
         </div><!--/span-->
       </div><!--/row-->

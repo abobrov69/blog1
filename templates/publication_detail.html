@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Message{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+            <p><a href="/">[Перейти на главную страницу]</a></p>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12">
+              <h2>Message</h2>
+        </div><!--/span-->
+      </div><!--/row-->
+      <div class="row-fluid">
+            <div class="span12"><i>{{ publication.date }}</i> / {{publication.author}}
+      </div><!--/row-->
+      <div class="row-fluid">
+        <div class="span12">
+            <p>{{ publication.text }}</p>
+        </div><!--/span-->
+      </div><!--/row-->
+    </div><!--/.fluid-container-->
+
+{% endblock %}

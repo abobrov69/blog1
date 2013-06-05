@@ -12,7 +12,7 @@ class Publication(models.Model):
         return str(self.date) + '\n' + self.text
 
     def get_absolute_url(self):
-        return reverse('msglist') #, kwargs={'pk': self.pk})
+        return reverse('blogclass') #, kwargs={'pk': self.pk})
 
     class Meta:
         ordering = ["-date"]

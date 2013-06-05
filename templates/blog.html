@@ -27,12 +27,12 @@
           <div class="span3">&nbsp</div>
           <div class="span9">
              {% if form.errors %}
-                   <p style="color: red;">
+                   <p class="text-error">
                    Error{{ form.errors|pluralize }}: {{ form.errmsg }}
                    </p>
              {% endif %}
              {% if db_error %}
-                   <p style="color: red;">
+                   <p class="text-error">
                    Database error: {{ db_error }} ! Message can't be saved.
              {% endif %}
          </div>
@@ -54,9 +54,9 @@
                          <div class="span6">{{msg.text}}</div>
                          <div class="span1">{{msg.author}}</div>
                          <div class="span2">
-                             <a href="#" class="btn btn-mini"><i class="icon-search"></i></a>&nbsp
+                             <a href="{{ msg.pk }}/" class="btn btn-mini"><i class="icon-search"></i></a>&nbsp
                              {% if msg.author|slugify == form.user|slugify %}
-                                 <a href="{{ msg.pk }}" class="btn btn-mini"><i class="icon-pencil"></i></a>&nbsp
+                                 <a href="{{ msg.pk }}/edit" class="btn btn-mini"><i class="icon-pencil"></i></a>&nbsp
                                  <a href="{{ msg.pk }}/delete" class="btn btn-mini"><i class="icon-trash"></i></a>&nbsp
                              {% endif %}
                          </div>
