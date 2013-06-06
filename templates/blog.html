@@ -62,7 +62,20 @@
            </strong></div>
       </div>
       <div class="row-fluid">
-           <div class="span12" align="center">( Messages from {{ page_obj.start_index }} to {{ page_obj.end_index }} )</div>
+           <div class="span3" align="right">&nbsp</div>
+           <div class="span6" align="center">( Messages from {{ page_obj.start_index }} to {{ page_obj.end_index }} )</div>
+           <div class="span3" align="right">
+                Pages:
+                {% if left_dots %}
+                    <a href="/{{ left_dots }}">...</a>
+                {% endif %}
+                {% for pg in pg_list %}
+                    <a href="/{{ pg }}">{{ pg }}</a>
+                {% endfor %}
+                {% if right_dots %}
+                    <a href="/{{ right_dots }}">...</a>
+                {% endif %}
+           </div>
       </div>
       <div class="row-fluid">
            <div class="span12"><hr size="3" width="100%" align="center" color="black"></div>

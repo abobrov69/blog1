@@ -51,7 +51,7 @@ class BlogMainView(MsgListView):
     form_class = MsgForm
     context_object_name = 'msg_list'
     show_msg_lenght = 60
-    page_list_lenght = 6
+    max_page_list_lenght = 10
     paginate_by = 5
     db_error = False
     form = False
@@ -79,7 +79,23 @@ class BlogMainView(MsgListView):
         context = super(BlogMainView, self).get_context_data(**kwargs)
         context ['db_error'] = self.db_error
         if self.form: context['form'] = self.form
-        self.page_list_lenght = 6
+        page_list_lenght = min (self.max_page_list_lenght, context ['paginator'].num_pages / 2 + 1)
+        if page_list_lenght >= context ['paginator'].num_pages:
+            start = 0
+            end = context ['paginator'].num_pages
+        elif context ['page_obj'].number <= page_list_lenght / 2 + 1:
+            start = 0
+            end = page_list_lenght
+        elif context ['page_obj'].number > context ['paginator'].num_pages - page_list_lenght / 2:
+            end = context ['paginator'].num_pages
+            start = end - page_list_lenght
+        else:
+           start =  context ['page_obj'].number - page_list_lenght / 2 - 1
+           end = start + page_list_lenght
+
+        context ['left_dots'] = ' '+str (start)+' ' if start>0 else ''
+        context ['right_dots'] = ' '+str(end + 1)+' ' if end<context ['paginator'].num_pages else ''
+        context ['pg_list'] = [' '+str(x+1)+' ' for x in range (start, end) ]
         return context
 
     def SetFormUser (self,request):
