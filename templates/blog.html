@@ -46,6 +46,27 @@
       <div class="row-fluid">
            <div class="span12"><hr size="3" width="100%" align="center" color="black"></div>
       </div>
+      <div class="row-fluid">
+           <div class="span4" align="right"><strong>
+               {% if page_obj.has_next %}
+                  <a href="/{{ page_obj.next_page_number }}">[<< Previous {{paginator.per_page}} messages]</a>
+               {% endif %}
+           </strong></div>
+           <div class="span4" align="center"><strong>
+               {{ page_obj }}</strong>
+           </div>
+           <div class="span4" align="left"><strong>
+               {% if page_obj.has_previous %}
+                  <a href="/{{ page_obj.previous_page_number }}">[Next {{paginator.per_page}} messages >>]</a>
+               {% endif %}
+           </strong></div>
+      </div>
+      <div class="row-fluid">
+           <div class="span12" align="center">( Messages from {{ page_obj.start_index }} to {{ page_obj.end_index }} )</div>
+      </div>
+      <div class="row-fluid">
+           <div class="span12"><hr size="3" width="100%" align="center" color="black"></div>
+      </div>
 
              {% if msg_list %}
                   {% for msg in msg_list %}
@@ -54,7 +75,7 @@
                          <div class="span6">{{msg.text}}</div>
                          <div class="span1">{{msg.author}}</div>
                          <div class="span2">
-                             <a href="{{ msg.pk }}/" class="btn btn-mini"><i class="icon-search"></i></a>&nbsp
+                             <a href="{{ msg.pk }}/detail" class="btn btn-mini"><i class="icon-search"></i></a>&nbsp
                              {% if msg.author|slugify == form.user|slugify %}
                                  <a href="{{ msg.pk }}/edit" class="btn btn-mini"><i class="icon-pencil"></i></a>&nbsp
                                  <a href="{{ msg.pk }}/delete" class="btn btn-mini"><i class="icon-trash"></i></a>&nbsp

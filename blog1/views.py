@@ -51,6 +51,7 @@ class BlogMainView(MsgListView):
     form_class = MsgForm
     context_object_name = 'msg_list'
     show_msg_lenght = 60
+    page_list_lenght = 6
     paginate_by = 5
     db_error = False
     form = False
@@ -68,16 +69,18 @@ class BlogMainView(MsgListView):
                 if len(msg.text) > self.show_msg_lenght: msg.text = msg.text[:self.show_msg_lenght-5] + ' ...'
         return msg_lst
 
+
 #    def render_to_response(self, context, **response_kwargs):
 #        a = dc
 #        return super (BlogMainView,self).render_to_response(self, context, **response_kwargs)
 
 
     def get_context_data(self, **kwargs):
-        context = {'db_error': self.db_error}
+        context = super(BlogMainView, self).get_context_data(**kwargs)
+        context ['db_error'] = self.db_error
         if self.form: context['form'] = self.form
-        context.update(kwargs)
-        return super(BlogMainView, self).get_context_data(**context)
+        self.page_list_lenght = 6
+        return context
 
     def SetFormUser (self,request):
         self.form.user = '' if request.user.is_anonymous() else request.user.username
@@ -87,6 +90,7 @@ class BlogMainView(MsgListView):
     def get(self, request, *args, **kwargs):
         self.form = self.form_class()
         self.SetFormUser (request)
+#        c = kwargs ['context']
 #        aaaa = ldfkldfk
         return super(BlogMainView, self).get (request)
 
