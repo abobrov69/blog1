@@ -25,23 +25,6 @@ def display_meta(request):
         html.append('<tr><td>%s</td><td>%s</td></tr>' % (k, v))
     return HttpResponse('<table>%s</table>' % '\n'.join(html))
 
-"""
-def blog_main(request):
-    if request.method == 'POST':
-        form = MsgForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            try:
-                Publication (date=datetime.now(), text=cd['message']).save()
-                # form = MsgForm()
-            except:
-                form = MsgForm(request.POST)
-                return render_to_response('blog.html', {'form': form, 'msg_list': Publication.objects.all(), 'db_error':True})
-            return HttpResponseRedirect (reverse('blogmain'))
-    else:
-        form = MsgForm()
-    return render_to_response('blog.html', {'form': form, 'msg_list': Publication.objects.all(), 'db_error':False})
-"""
 class MsgListView(ListView):
     model = Publication
     template_name = "publication_list.html"
