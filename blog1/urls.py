@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from views import MsgListView, BlogMainView, MsgDelete, MsgUpdate, display_meta, MsgView
+from views import MsgListView, BlogMainView, MsgDelete, MsgUpdate, display_meta, MsgView, BlogMainViewAnchor
 from django.conf import settings
 import os
 from django.contrib.auth.views import login, logout
@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     url(r'msg/(?P<pk>\d+)/delete/$', MsgDelete.as_view(), name='msg_delete'),
     url(r'(?P<pk>\d+)/delete/$', MsgDelete.as_view(), name='msg_delete'),
     url(r'(?P<pk>\d+)/detail/$', MsgView.as_view(), name='msg_detail'),
+    url(r'(?P<post>\d+)/post/$', BlogMainViewAnchor.as_view()),
     url(r'(?P<page>\d+)/$', BlogMainView.as_view ()),
     (r'^accounts/login/$', GnsLoginForm.as_view()),  #  login),
 #    (r'^accounts/login/$', login),  #  ),

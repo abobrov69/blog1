@@ -47,16 +47,23 @@ class MsgListView(ListView):
     template_name = "publication_list.html"
     context_object_name = 'messages_list'
 
-class BlogMainView(MsgListView):
+class BlogMainMixin (object):
+    paginate_by = 15
+
+class BlogMainView(BlogMainMixin,MsgListView):
     form_class = MsgForm
     context_object_name = 'msg_list'
     show_msg_lenght = 60
-    max_page_list_lenght = 10
-    paginate_by = 5
     db_error = False
     form = False
     template_name = 'blog.html'
+    max_page_list_lenght = 10
+    min_page_list_lenght = 5
 
+
+    def dispatch(self, request, *args, **kwargs):
+        self.hostname = request.get_host()
+        return MsgListView.dispatch(self, request, *args, **kwargs)
 
     def get_template_names(self):
         return [self.template_name]
@@ -79,7 +86,9 @@ class BlogMainView(MsgListView):
         context = super(BlogMainView, self).get_context_data(**kwargs)
         context ['db_error'] = self.db_error
         if self.form: context['form'] = self.form
+        if self.hostname: context['hostname'] = self.hostname
         page_list_lenght = min (self.max_page_list_lenght, context ['paginator'].num_pages / 2 + 1)
+        page_list_lenght = max (page_list_lenght, min (self.min_page_list_lenght, context ['paginator'].num_pages ))
         if page_list_lenght >= context ['paginator'].num_pages:
             start = 0
             end = context ['paginator'].num_pages
@@ -96,6 +105,7 @@ class BlogMainView(MsgListView):
         context ['left_dots'] = ' '+str (start)+' ' if start>0 else ''
         context ['right_dots'] = ' '+str(end + 1)+' ' if end<context ['paginator'].num_pages else ''
         context ['pg_list'] = [' '+str(x+1)+' ' for x in range (start, end) ]
+#        aaa = bbb
         return context
 
     def SetFormUser (self,request):
@@ -129,6 +139,40 @@ class BlogMainView(MsgListView):
                 return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context)) #
             return HttpResponseRedirect (reverse('blogclass'))
         return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context))
+
+class BlogMainViewAnchor(BlogMainMixin,MsgListView):
+
+    def get (self, request, *args, **kwargs):
+        post = self.kwargs.get('post') or self.request.GET.get('post')
+        redir_str = '/'
+        try:
+            post = int(post)
+        except ValueError:
+            return HttpResponseRedirect (redir_str)
+        qs = self.get_queryset ()
+        for i in range (len(qs)/self.paginate_by):
+            if qs [(i+1)*self.paginate_by].pk<post:
+                start = i*self.paginate_by
+                end = (i+1)*self.paginate_by
+                break
+        else:
+            i += 1
+            start = i*self.paginate_by
+            end = len(qs)
+        if end > start:
+            q1 = []
+            for j in range (start,end):
+                if qs[j].pk == post:
+                    redir_str += (str (i+1) + "/#" + str(post))
+                    break
+                else:
+                    q1.append(qs[j].pk)
+#        aaa = asdasd
+        return HttpResponseRedirect (redir_str)
+
+#    def post(self, request, *args, **kwargs):
+#        aaa = bbb
+#        return HttpResponseRedirect ('/msg/')
 
 class MsgCreate(CreateView):
     form_class = MsgForm2
