@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    <div class="container">
+    <div class="container" xmlns="http://www.w3.org/1999/html">
       <div class="row-fluid">
           {% if form.user %}
               <p><a href="/accounts/logout/">Выход</a> [{{ form.user }}]</p>
@@ -77,7 +77,7 @@
            </div>
       </div>
       <div class="row-fluid">
-           <div class="span12"><hr size="3" width="100%" align="center" color="black"></div>
+           <div class="span12"><strong><hr size="3" width="100%" align="center" color="black"></strong></div>
       </div>
              {% if msg_list %}
                   {% for msg in msg_list %}
@@ -97,7 +97,10 @@
                              <small><em>Permanent link to this message: <a href="/{{ msg.pk }}/post">http://{{hostname}}/{{ msg.pk }}/post</a></em></small>
                          </div>
                       </div>
-                  {% endfor %}
+                      <div class="row-fluid">
+                           <div class="span12"><hr size="1" width="100%" align="center" color="black"></div>
+                      </div>
+                 {% endfor %}
              {% endif %}
     </div><!--/.fluid-container-->
 

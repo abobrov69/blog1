@@ -47,10 +47,28 @@ class MsgListView(ListView):
     template_name = "publication_list.html"
     context_object_name = 'messages_list'
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MsgListView,self).dispatch (request, *args, **kwargs)
+
 class BlogMainMixin (object):
     paginate_by = 15
+    model = Publication
 
-class BlogMainView(BlogMainMixin,MsgListView):
+
+    def get_queryset (self):
+        if self.queryset is not None:
+            queryset = self.queryset
+            if hasattr(queryset, '_clone'):
+                queryset = queryset._clone()
+        elif self.model is not None:
+            queryset = self.model._default_manager.filter (isdeleted=False)
+        else:
+            raise ImproperlyConfigured("'%s' must define 'queryset' or 'model'"
+                                       % self.__class__.__name__)
+        return queryset
+
+class BlogMainView(BlogMainMixin,ListView):
     form_class = MsgForm
     context_object_name = 'msg_list'
     show_msg_lenght = 60
@@ -63,19 +81,17 @@ class BlogMainView(BlogMainMixin,MsgListView):
 
     def dispatch(self, request, *args, **kwargs):
         self.hostname = request.get_host()
-        return MsgListView.dispatch(self, request, *args, **kwargs)
+        return ListView.dispatch(self, request, *args, **kwargs)
 
     def get_template_names(self):
         return [self.template_name]
 
     def get_queryset (self):
-        msg_lst = super(BlogMainView,self).get_queryset ()
-        if msg_lst:
-#            msg_lst = [msg.text = msg.text[:self.show_msg_lenght-5] + ' ...' if len(msg.text) > self.show_msg_lenght for msg in msg_lst]
-            for msg in msg_lst:
-                if len(msg.text) > self.show_msg_lenght: msg.text = msg.text[:self.show_msg_lenght-5] + ' ...'
-        return msg_lst
 
+        queryset = BlogMainMixin.get_queryset(self)
+        for msg in queryset:
+                if len(msg.text) > self.show_msg_lenght: msg.text = msg.text[:self.show_msg_lenght-5] + ' ...'
+        return queryset
 
 #    def render_to_response(self, context, **response_kwargs):
 #        a = dc
@@ -140,7 +156,7 @@ class BlogMainView(BlogMainMixin,MsgListView):
             return HttpResponseRedirect (reverse('blogclass'))
         return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context))
 
-class BlogMainViewAnchor(BlogMainMixin,MsgListView):
+class BlogMainViewAnchor(BlogMainMixin,ListView):
 
     def get (self, request, *args, **kwargs):
         post = self.kwargs.get('post') or self.request.GET.get('post')
@@ -160,53 +176,51 @@ class BlogMainViewAnchor(BlogMainMixin,MsgListView):
             start = i*self.paginate_by
             end = len(qs)
         if end > start:
-            q1 = []
             for j in range (start,end):
                 if qs[j].pk == post:
                     redir_str += (str (i+1) + "/#" + str(post))
+                    z = qs[j].isdeleted
+#                    bbb = kjhkjh
                     break
-                else:
-                    q1.append(qs[j].pk)
-#        aaa = asdasd
+            else:
+                redir_str += str (i+1)
+#                aaa = asdasd
+
         return HttpResponseRedirect (redir_str)
 
-#    def post(self, request, *args, **kwargs):
-#        aaa = bbb
-#        return HttpResponseRedirect ('/msg/')
 
-class MsgCreate(CreateView):
-    form_class = MsgForm2
+class CheckDeletedMsgMixin (object):
     model = Publication
-    template_name = "publication_form.html"
-    # context_object_name = 'messages_list'
 
-    def form_valid(self, form):
-        form.instance.date=datetime.now()
-        return super(MsgCreate, self).form_valid(form)
+    def get (self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.isdeleted:
+           return HttpResponseRedirect ('/'+str(obj.pk)+'/post')
+        else:
+            return self.upper_class.get (self, request, *args, **kwargs)
 
-class MsgUpdate(UpdateView):
-    form_class = MsgForm2
-    model = Publication
-    success_url = reverse_lazy('blogclass')
-    template_name = "publication_form.html"
+class MakeSuccessUrlMixin (CheckDeletedMsgMixin):
+    error_template_name = "publication_user_error.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        if request.user.username <> self.get_object().author.username:
-            self.template_name = "publication_user_error.html"
-        return super(MsgUpdate, self).dispatch(request, *args, **kwargs)
+        obj = self.get_object()
+        if request.user.username <> obj.author.username:
+            self.template_name = self.error_template_name
+        self.success_url = reverse_lazy('msg_post', args=[str(obj.pk)])
+        return self.upper_class.dispatch(self, request, *args, **kwargs)
 
-class MsgDelete(DeleteView):
-    model = Publication
+
+class MsgUpdate(MakeSuccessUrlMixin,UpdateView):
+    form_class = MsgForm2
+    success_url = reverse_lazy('blogclass')
+    template_name = "publication_form.html"
+    upper_class = UpdateView
+
+class MsgDelete(MakeSuccessUrlMixin,DeleteView):
     success_url = reverse_lazy('blogclass')
     template_name = "publication_confirm_delete.html"
+    upper_class = DeleteView
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.username <> self.get_object().author.username:
-            self.template_name = "publication_user_error.html"
-        return super(MsgDelete, self).dispatch(request, *args, **kwargs)
-
-class MsgView (DetailView):
-      model = Publication
-      template_name = "publication_detail.html"
+class MsgView (CheckDeletedMsgMixin,DetailView):
+    template_name = "publication_detail.html"
