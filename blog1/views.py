@@ -3,7 +3,8 @@ from sys import exc_info
 from forms import MsgForm, MsgForm2
 from models import Publication
 from datetime import datetime
-from django.views.generic import TemplateView, ListView # , View, FormView
+from django.views.generic import RedirectView, TemplateView, ListView
+from django.views.generic.list import MultipleObjectMixin # , View, FormView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -37,8 +38,9 @@ class MsgListView(ListView):
 class BlogMainMixin (object):
     paginate_by = 15
     model = Publication
+    queryset = Publication._default_manager.filter (isdeleted=False)
 
-
+"""
     def get_queryset (self):
         if self.queryset is not None:
             queryset = self.queryset
@@ -50,6 +52,7 @@ class BlogMainMixin (object):
             raise ImproperlyConfigured("'%s' must define 'queryset' or 'model'"
                                        % self.__class__.__name__)
         return queryset
+"""
 
 class BlogMainView(BlogMainMixin,ListView):
     form_class = MsgForm
@@ -71,7 +74,8 @@ class BlogMainView(BlogMainMixin,ListView):
 
     def get_queryset (self):
 
-        queryset = BlogMainMixin.get_queryset(self)
+#        queryset = BlogMainMixin.get_queryset(self)
+        queryset = super (BlogMainView, self).get_queryset()
         for msg in queryset:
                 if len(msg.text) > self.show_msg_lenght: msg.text = msg.text[:self.show_msg_lenght-5] + ' ...'
         return queryset
@@ -83,6 +87,8 @@ class BlogMainView(BlogMainMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super(BlogMainView, self).get_context_data(**kwargs)
+#        q1 = context.__class__.__name__
+#        bbb = qqq
         context ['db_error'] = self.db_error
         if self.form: context['form'] = self.form
         if self.hostname: context['hostname'] = self.hostname
@@ -139,14 +145,45 @@ class BlogMainView(BlogMainMixin,ListView):
             return HttpResponseRedirect (reverse('blogclass'))
         return super(BlogMainView, self).get (request)  #  self.render_to_response(self.get_context_data(context))
 
-class BlogMainViewAnchor(BlogMainMixin,ListView):
+class BlogMainViewAnchor(BlogMainMixin,MultipleObjectMixin,RedirectView):
 
+    def get_redirect_url(self, **kwargs):
+        post = self.kwargs.get('post') or self.request.GET.get('post')
+        redir_str = '/'
+        try:
+            post = int(post)
+        except ValueError:
+            return redir_str
+        qs = self.get_queryset ()
+        for i in range (len(qs)/self.paginate_by):
+            if qs [(i+1)*self.paginate_by].pk<post:
+                start = i*self.paginate_by
+                end = (i+1)*self.paginate_by
+                break
+        else:
+            i += 1
+            start = i*self.paginate_by
+            end = len(qs)
+        if end > start:
+            for j in range (start,end):
+                if qs[j].pk == post:
+                    redir_str += (str (i+1) + "/#" + str(post))
+                    z = qs[j].isdeleted
+#                    bbb = kjhkjh
+                    break
+            else:
+                redir_str += str (i+1)
+#                aaa = asdasd
+        return redir_str
+
+"""
     def get (self, request, *args, **kwargs):
         post = self.kwargs.get('post') or self.request.GET.get('post')
         redir_str = '/'
         try:
             post = int(post)
         except ValueError:
+            self.url = redir_str
             return HttpResponseRedirect (redir_str)
         qs = self.get_queryset ()
         for i in range (len(qs)/self.paginate_by):
@@ -168,9 +205,9 @@ class BlogMainViewAnchor(BlogMainMixin,ListView):
             else:
                 redir_str += str (i+1)
 #                aaa = asdasd
-
+        self.url = redir_str
         return HttpResponseRedirect (redir_str)
-
+"""
 
 class CheckDeletedMsgMixin (object):
     model = Publication
