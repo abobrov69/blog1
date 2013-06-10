@@ -215,7 +215,7 @@ class CheckDeletedMsgMixin (object):
     def get (self, request, *args, **kwargs):
         obj = self.get_object()
         if obj.isdeleted:
-           return HttpResponseRedirect ('/'+str(obj.pk)+'/post')
+           return HttpResponseRedirect ('/'+'/post'+str(obj.pk))
         else:
             return self.upper_class.get (self, request, *args, **kwargs)
 
@@ -244,3 +244,4 @@ class MsgDelete(MakeSuccessUrlMixin,DeleteView):
 
 class MsgView (CheckDeletedMsgMixin,DetailView):
     template_name = "publication_detail.html"
+    upper_class = DetailView

@@ -131,8 +131,11 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",)
-
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+)
+INTERNAL_IPS = ('127.0.0.1',
+)
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
