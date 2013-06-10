@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 #from django.contrib.auth.models import AnonymousUser
 from django.views.generic.detail import DetailView
+from gans_auth_views import gns_login_required
 
 
 class AboutView(TemplateView):
@@ -113,22 +114,23 @@ class BlogMainView(BlogMainMixin,ListView):
 #        aaa = bbb
         return context
 
-    def SetFormUser (self,request):
-        self.form.user = '' if request.user.is_anonymous() else request.user.username
+#    def SetFormUser (self,request):
+#        self.form.user = '' if request.user.is_anonymous() else request.user.username
 #        u = self.form.user
 #        asdqd = asdasdasdsd
 
     def get(self, request, *args, **kwargs):
         self.form = self.form_class()
-        self.SetFormUser (request)
+#        request.session ['test1'] = 'test1'
+#        self.SetFormUser (request)
 #        c = kwargs ['context']
 #        aaaa = ldfkldfk
         return super(BlogMainView, self).get (request)
 
-    @method_decorator(login_required)
+    @method_decorator(gns_login_required)
     def post(self, request, *args, **kwargs):
         self.form = self.form_class(request.POST)
-        self.SetFormUser (request)
+#        self.SetFormUser (request)
 #        context = {'form': self.form}
 #        ib = self.form.is_bound
 #           aaaaaaaaaa = ffffffffff
