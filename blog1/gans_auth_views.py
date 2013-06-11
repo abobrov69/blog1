@@ -8,8 +8,15 @@ from django.shortcuts import resolve_url
 from django.contrib.sites.models import get_current_site
 from functools import wraps
 from django.utils.decorators import available_attrs
+from django.utils.encoding import force_str
+from django.conf import settings
+try:
+    from urllib.parse import urlparse
+except ImportError:     # Python 2
+    from urlparse import urlparse
 
-def gns_login_required(login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
+
+def gns_user_passes_test(test_func, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
     """
     Decorator for views that checks that the user passes the given test,
     redirecting to the log-in page if necessary. The test should be a callable
@@ -19,16 +26,13 @@ def gns_login_required(login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
     def decorator(view_func):
         @wraps(view_func, assigned=available_attrs(view_func))
         def _wrapped_view(request, *args, **kwargs):
-            request.session ['request_POST'] = request.POST
-            a = request.session
-            bbb = asdasdasd
-            if is_authenticated(request.user):
+            request.session['request_POST']=request.POST
+            if test_func(request.user):
                 return view_func(request, *args, **kwargs)
             path = request.build_absolute_uri()
             # urlparse chokes on lazy objects in Python 3, force to str
             resolved_login_url = force_str(
                 resolve_url(login_url or settings.LOGIN_URL))
-
             # If the login url is the same scheme and net location then just
             # use the path as the "next" url.
             login_scheme, login_netloc = urlparse(resolved_login_url)[:2]
@@ -36,7 +40,6 @@ def gns_login_required(login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
             if ((not login_scheme or login_scheme == current_scheme) and
                 (not login_netloc or login_netloc == current_netloc)):
                 path = request.get_full_path()
-#            ddkj = asdhhkjafakjh
             from django.contrib.auth.views import redirect_to_login
             return redirect_to_login(
                 path, resolved_login_url, redirect_field_name)
@@ -44,7 +47,22 @@ def gns_login_required(login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
     return decorator
 
 
-class GnsLoginForm (FormView):
+def gns_login_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    """
+    Decorator for views that checks that the user is logged in, redirecting
+    to the log-in page if necessary.
+    """
+    actual_decorator = gns_user_passes_test(
+        lambda u: u.is_authenticated(),
+        login_url=login_url,
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+class GnsLoginFormView (FormView):
     form_class = AuthenticationForm
     redirect_field_name = REDIRECT_FIELD_NAME
     template_name = 'registration/login.html'
@@ -66,7 +84,7 @@ class GnsLoginForm (FormView):
 
             context [self.redirect_field_name] = redirect_to
         context.update(kwargs)
-        return super(GnsLoginForm, self).get_context_data(**context)
+        return super(GnsLoginFormView, self).get_context_data(**context)
 
     def get(self, request, *args, **kwargs):
         self.form = self.form_class()
@@ -79,7 +97,6 @@ class GnsLoginForm (FormView):
         self.form = self.form_class(data=request.POST)
         context = self.get_context_data (request=request)
         redirect_to = context [self.redirect_field_name]
-        q1 = request.session ['request_POST']
         if self.form.is_valid():
 
             # Okay, security check complete. Log the user in.
@@ -89,8 +106,6 @@ class GnsLoginForm (FormView):
                 request.session.delete_test_cookie()
 
 #            request.session ['test1'] = 'test2'
-            q2 = request.session ['request_POST']
-            aaa = ddd
             return HttpResponseRedirect(redirect_to)
 
         request.session.set_test_cookie()

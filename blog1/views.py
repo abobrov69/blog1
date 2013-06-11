@@ -120,8 +120,13 @@ class BlogMainView(BlogMainMixin,ListView):
 #        asdqd = asdasdasdsd
 
     def get(self, request, *args, **kwargs):
-        self.form = self.form_class()
-#        request.session ['test1'] = 'test1'
+        initial = None
+        if 'request_POST' in request.session:
+            initial = {}
+            initial['message'] = request.session ['request_POST']['message']
+            del request.session["request_POST"]
+#            eff = dfsdfsf
+        self.form = self.form_class(initial=initial)
 #        self.SetFormUser (request)
 #        c = kwargs ['context']
 #        aaaa = ldfkldfk
@@ -132,8 +137,8 @@ class BlogMainView(BlogMainMixin,ListView):
         self.form = self.form_class(request.POST)
 #        self.SetFormUser (request)
 #        context = {'form': self.form}
-#        ib = self.form.is_bound
-#           aaaaaaaaaa = ffffffffff
+#        ib = request.session['requst_POST']
+#        aaaaaaaaaa = ffffffffff
         if self.form.is_valid():
             cd = self.form.cleaned_data
             self.db_error = False
